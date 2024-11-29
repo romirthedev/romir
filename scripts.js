@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const dropContainer = document.querySelector(".animated-drops");
-  
+
   // Create animated drops
   function createDrops() {
     for (let i = 0; i < 100; i++) {
@@ -19,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Fade-in sections on scroll
   const sections = document.querySelectorAll("section");
-  
+
   function checkVisibility() {
     sections.forEach(section => {
       const rect = section.getBoundingClientRect();
@@ -58,4 +58,21 @@ document.addEventListener("DOMContentLoaded", () => {
       drop.style.backgroundColor = colorString;
     });
   });
+
+  // Fade-in effect for sections
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.5 });
+
+  sections.forEach(section => {
+    observer.observe(section);
+  });
+
+  // Example: Typing effect on header
+  const header = document.querySelector('h1');
+  header.classList.add('typing');
 });
