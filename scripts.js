@@ -72,6 +72,44 @@ document.addEventListener("DOMContentLoaded", () => {
     observer.observe(section);
   });
 
+  document.addEventListener("mousemove", (e) => {
+    const bubble = document.createElement("div");
+    bubble.classList.add("particle");
+    document.body.appendChild(bubble);
+    bubble.style.left = `${e.pageX}px`;
+    bubble.style.top = `${e.pageY}px`;
+    bubble.style.animation = `particle-animation 1s ease-out`;
+
+    setTimeout(() => bubble.remove(), 1000);
+  });
+
+  let loading = false;
+
+  window.addEventListener('scroll', () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight && !loading) {
+      loading = true;
+      loadMoreContent();
+    }
+  });
+
+  function loadMoreContent() {
+    const loader = document.createElement('div');
+    loader.classList.add('loader');
+    loader.innerHTML = `<p>Loading more content...</p>`;
+    document.querySelector('main').appendChild(loader);
+
+    // Simulate loading time
+    setTimeout(() => {
+      loader.remove();
+      const newContent = document.createElement('div');
+      newContent.classList.add('content-block');
+      newContent.innerHTML = `<p>New content loaded.</p>`;
+      document.querySelector('main').appendChild(newContent);
+
+      loading = false;
+    }, 2000);
+  }
+
   // Example: Typing effect on header
   const header = document.querySelector('h1');
   header.classList.add('typing');
