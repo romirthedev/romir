@@ -86,3 +86,40 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.head.appendChild(style);
 });
+
+document.getElementById('slot-btn').addEventListener('click', () => {
+  document.getElementById('slot-machine').style.display = 'flex';
+});
+
+document.getElementById('close').addEventListener('click', () => {
+  document.getElementById('slot-machine').style.display = 'none';
+});
+
+document.getElementById('lever').addEventListener('click', () => {
+  spinSlots();
+  generateFact();
+});
+
+const slots = ['🍎', '🍌', '🍒', '🍇', '🍉', '🍍'];
+const facts = [
+  "I love coding!",
+  "I enjoy playing chess.",
+  "I’m a big fan of sci-fi movies.",
+  "I’ve been to three different countries!",
+  "I’m a coffee addict!",
+  "I like learning new languages."
+];
+
+function spinSlots() {
+  const randomSpin = () => slots[Math.floor(Math.random() * slots.length)];
+  document.getElementById('slot1').innerText = randomSpin();
+  document.getElementById('slot2').innerText = randomSpin();
+  document.getElementById('slot3').innerText = randomSpin();
+  document.getElementById('slot4').innerText = randomSpin();
+}
+
+function generateFact() {
+  const randomFact = facts[Math.floor(Math.random() * facts.length)];
+  document.getElementById('fact').innerText = randomFact;
+}
+
