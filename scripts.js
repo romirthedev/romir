@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+/* document.addEventListener("DOMContentLoaded", () => {
   const dropContainer = document.querySelector(".animated-drops");
 
   // Create animated drops
@@ -113,4 +113,40 @@ document.addEventListener("DOMContentLoaded", () => {
   // Example: Typing effect on header
   const header = document.querySelector('h1');
   header.classList.add('typing');
+});
+*/
+document.addEventListener("DOMContentLoaded", () => {
+  const dropContainer = document.querySelector(".animated-drops");
+
+  // Existing code...
+
+  // Slot Machine Feature
+  const slotMachineIcon = document.getElementById("slot-machine-icon");
+  const slotMachineModal = document.getElementById("slot-machine-modal");
+  const spinButton = document.getElementById("spin-button");
+  const funFact = document.getElementById("fun-fact");
+  const closeSlotMachine = document.getElementById("close-slot-machine");
+  const slots = document.querySelectorAll("#slot-machine .slot");
+
+  const funFacts = [
+    "I love hiking in Arizona!",
+    "I play the guitar in my free time.",
+    "I once cooked a 5-course meal.",
+    "My favorite programming language is Python.",
+  ];
+
+  slotMachineIcon.addEventListener("click", () => {
+    slotMachineModal.style.display = "flex";
+  });
+
+  closeSlotMachine.addEventListener("click", () => {
+    slotMachineModal.style.display = "none";
+  });
+
+  spinButton.addEventListener("click", () => {
+    slots.forEach(slot => {
+      slot.textContent = ["🍒", "🔔", "⭐", "🍋"][Math.floor(Math.random() * 4)];
+    });
+    funFact.textContent = funFacts[Math.floor(Math.random() * funFacts.length)];
+  });
 });
