@@ -22,13 +22,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const maxScroll = document.body.scrollHeight - window.innerHeight;
     const scrollPercent = window.scrollY / maxScroll; // Scroll progress (0 to 1)
 
-    // Calculate interpolated color between yellow (#FFDE59) and sea blue (#87CEEB)
+    // Calculate interpolated color between light blue (#87CEEB) and yellow (#FFDE59)
     const interpolateColor = (start, end, factor) => {
       return Math.round(start + (end - start) * factor);
     };
 
-    const startColor = { r: 255, g: 222, b: 89 }; // Yellow
-    const endColor = { r: 135, g: 206, b: 235 }; // Sea Blue
+    const startColor = { r: 135, g: 206, b: 235 }; // Light Blue
+    const endColor = { r: 255, g: 222, b: 89 }; // Yellow
 
     const newColor = {
       r: interpolateColor(startColor.r, endColor.r, scrollPercent),
