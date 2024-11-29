@@ -6,6 +6,61 @@ body {
   color: #333;
   overflow-x: hidden;
 }
+/* Hover Effects */
+button:hover {
+  transform: scale(1.1);
+  background-color: #ff6347;
+}
+
+/* Parallax Scrolling */
+/* Fade In on Load */
+.fade-in {
+  animation: fadeIn 2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Sliding Animations */
+.slide-in {
+  transform: translateX(100%);
+  animation: slideIn 1s forwards;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* Bouncing Animations */
+@keyframes bounce {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0); }
+}
+
+.bounce {
+  animation: bounce 1s infinite;
+}
+button {
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+/* Text Typing Effect */
+.typing {
+  width: 0;
+  overflow: hidden;
+  border-right: 2px solid #000;
+  white-space: nowrap;
+  animation: typing 3s steps(40) 1s forwards;
+}
+
+@keyframes typing {
+  from { width: 0; }
+  to { width: 100%; }
+}
 
 header {
   text-align: center;
