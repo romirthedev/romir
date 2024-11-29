@@ -1,14 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const dropContainer = document.querySelector(".animated-drops");
-  const funFacts = [
-    "I am a Computer Science major at ASU.",
-    "I am working on a motion capture system.",
-    "I’ve raised nearly $500,000 for web app deployment.",
-    "I’m a software-centered researcher at MIT.",
-    "I love exploring new AI techniques."
-  ];
 
-  // Create animated drops (no changes)
+  // Create animated drops
   function createDrops() {
     for (let i = 0; i < 100; i++) {
       const drop = document.createElement("div");
@@ -17,109 +10,107 @@ document.addEventListener("DOMContentLoaded", () => {
       drop.style.height = `${Math.random() * 40 + 10}px`;
       drop.style.left = `${Math.random() * 100}vw`;
       drop.style.animationDuration = `${Math.random() * 5 + 2}s`;
-      drop.style.animationDelay = `${Math.random() * 3}s`;
+      drop.style.animationDelay = `${Math.random() * 3}s`; 
       dropContainer.appendChild(drop);
     }
   }
+
   createDrops();
 
-  // Fun fact slots feature
-  const slotButton = document.createElement('button');
-  slotButton.classList.add('slot-button');
-  slotButton.innerHTML = '🎰';  // Gambling slots icon
-  document.body.appendChild(slotButton);
+  // Fade-in sections on scroll
+  const sections = document.querySelectorAll("section");
 
-  slotButton.addEventListener('click', () => {
-    const wheel = document.createElement('div');
-    wheel.classList.add('slots-wheel');
-    document.body.appendChild(wheel);
-    
-    const xButton = document.createElement('button');
-    xButton.classList.add('close-button');
-    xButton.innerHTML = 'X';
-    wheel.appendChild(xButton);
-
-    xButton.addEventListener('click', () => {
-      wheel.remove();
+  function checkVisibility() {
+    sections.forEach(section => {
+      const rect = section.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.8) {
+        section.classList.add("visible");
+      }
     });
+  }
 
-    // Spin the slots and show a random fact
-    setTimeout(() => {
-      const randomFact = funFacts[Math.floor(Math.random() * funFacts.length)];
-      const factDisplay = document.createElement('p');
-      factDisplay.textContent = randomFact;
-      wheel.appendChild(factDisplay);
-      setTimeout(() => wheel.remove(), 3000);  // Remove after showing the fact
-    }, 1500);
+  // Check visibility on scroll and initial load
+  window.addEventListener("scroll", checkVisibility);
+  checkVisibility();
+
+  // Change drop colors on scroll
+  window.addEventListener("scroll", () => {
+    const drops = document.querySelectorAll(".drop");
+    const maxScroll = document.body.scrollHeight - window.innerHeight;
+    const scrollPercent = window.scrollY / maxScroll;
+
+    const interpolateColor = (start, end, factor) => {
+      return Math.round(start + (end - start) * factor);
+    };
+
+    const startColor = { r: 135, g: 206, b: 235 };
+    const endColor = { r: 255, g: 222, b: 89 };
+
+    const newColor = {
+      r: interpolateColor(startColor.r, endColor.r, scrollPercent),
+      g: interpolateColor(startColor.g, endColor.g, scrollPercent),
+      b: interpolateColor(startColor.b, endColor.b, scrollPercent),
+    };
+
+    const colorString = `rgb(${newColor.r}, ${newColor.g}, ${newColor.b})`;
+
+    drops.forEach((drop) => {
+      drop.style.backgroundColor = colorString;
+    });
   });
 
-  // Position slot button at top corner
-  slotButton.style.position = 'fixed';
-  slotButton.style.top = '20px';
-  slotButton.style.right = '20px';
-  slotButton.style.fontSize = '30px';
+  // Fade-in effect for sections
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.5 });
 
-  // Styling for the slot wheel and close button
-  const style = document.createElement('style');
-  style.innerHTML = `
-    .slots-wheel {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.8);
-      color: white;
-      border-radius: 10px;
-      text-align: center;
+  sections.forEach(section => {
+    observer.observe(section);
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    const bubble = document.createElement("div");
+    bubble.classList.add("particle");
+    document.body.appendChild(bubble);
+    bubble.style.left = `${e.pageX}px`;
+    bubble.style.top = `${e.pageY}px`;
+    bubble.style.animation = `particle-animation 1s ease-out`;
+
+    setTimeout(() => bubble.remove(), 1000);
+  });
+
+  let loading = false;
+
+  window.addEventListener('scroll', () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight && !loading) {
+      loading = true;
+      loadMoreContent();
     }
-    .close-button {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      background: red;
-      color: white;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  `;
-  document.head.appendChild(style);
+  });
+
+  function loadMoreContent() {
+    const loader = document.createElement('div');
+    loader.classList.add('loader');
+    loader.innerHTML = `<p>Loading more content...</p>`;
+    document.querySelector('main').appendChild(loader);
+
+    // Simulate loading time
+    setTimeout(() => {
+      loader.remove();
+      const newContent = document.createElement('div');
+      newContent.classList.add('content-block');
+      newContent.innerHTML = `<p>New content loaded.</p>`;
+      document.querySelector('main').appendChild(newContent);
+
+      loading = false;
+    }, 2000);
+  }
+
+  // Example: Typing effect on header
+  const header = document.querySelector('h1');
+  header.classList.add('typing');
 });
-
-document.getElementById('slot-btn').addEventListener('click', () => {
-  document.getElementById('slot-machine').style.display = 'flex';
-});
-
-document.getElementById('close').addEventListener('click', () => {
-  document.getElementById('slot-machine').style.display = 'none';
-});
-
-document.getElementById('lever').addEventListener('click', () => {
-  spinSlots();
-  generateFact();
-});
-
-const slots = ['🍎', '🍌', '🍒', '🍇', '🍉', '🍍'];
-const facts = [
-  "I love coding!",
-  "I enjoy playing chess.",
-  "I’m a big fan of sci-fi movies.",
-  "I’ve been to three different countries!",
-  "I’m a coffee addict!",
-  "I like learning new languages."
-];
-
-function spinSlots() {
-  const randomSpin = () => slots[Math.floor(Math.random() * slots.length)];
-  document.getElementById('slot1').innerText = randomSpin();
-  document.getElementById('slot2').innerText = randomSpin();
-  document.getElementById('slot3').innerText = randomSpin();
-  document.getElementById('slot4').innerText = randomSpin();
-}
-
-function generateFact() {
-  const randomFact = facts[Math.floor(Math.random() * facts.length)];
-  document.getElementById('fact').innerText = randomFact;
-}
-
