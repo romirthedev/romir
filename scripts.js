@@ -1,45 +1,45 @@
 document.addEventListener("DOMContentLoaded", () => {
   const dropContainer = document.querySelector(".animated-drops");
-  const sections = document.querySelectorAll("section");
 
-  // Function to create drops
   function createDrops() {
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 100; i++) {
       const drop = document.createElement("div");
       drop.classList.add("drop");
-      drop.style.width = `${Math.random() * 20 + 5}px`;
-      drop.style.height = drop.style.width;
-      drop.style.left = `${Math.random() * 100}vw`;
-      drop.style.top = `${Math.random() * 100}vh`;
-      drop.style.animationDuration = `${Math.random() * 5 + 3}s`;
-      drop.style.animationDelay = `${Math.random() * 5}s`;
+      drop.style.width = `${Math.random() * 20 + 5}px`; // Random width
+      drop.style.height = `${Math.random() * 40 + 10}px`; // Random height
+      drop.style.left = `${Math.random() * 100}vw`; // Random horizontal position
+      drop.style.animationDuration = `${Math.random() * 5 + 2}s`; // Random fall duration
+      drop.style.animationDelay = `${Math.random() * 3}s`; // Random staggered delay
       dropContainer.appendChild(drop);
     }
   }
 
-  // Create drops on load
   createDrops();
 
-  // Function to check section visibility
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-        }
-      });
-    },
-    { threshold: 0.3 }
-  );
-
-  sections.forEach((section) => observer.observe(section));
-
-  // Change drop color on scroll
+  // Function to update drop colors as the user scrolls
   window.addEventListener("scroll", () => {
     const drops = document.querySelectorAll(".drop");
-    const color = window.scrollY > 200 ? "#87ceeb" : "#ffde59";
+    const maxScroll = document.body.scrollHeight - window.innerHeight;
+    const scrollPercent = window.scrollY / maxScroll; // Scroll progress (0 to 1)
+
+    // Calculate interpolated color between yellow (#FFDE59) and sea blue (#87CEEB)
+    const interpolateColor = (start, end, factor) => {
+      return Math.round(start + (end - start) * factor);
+    };
+
+    const startColor = { r: 255, g: 222, b: 89 }; // Yellow
+    const endColor = { r: 135, g: 206, b: 235 }; // Sea Blue
+
+    const newColor = {
+      r: interpolateColor(startColor.r, endColor.r, scrollPercent),
+      g: interpolateColor(startColor.g, endColor.g, scrollPercent),
+      b: interpolateColor(startColor.b, endColor.b, scrollPercent),
+    };
+
+    const colorString = `rgb(${newColor.r}, ${newColor.g}, ${newColor.b})`;
+
     drops.forEach((drop) => {
-      drop.style.backgroundColor = color;
+      drop.style.backgroundColor = colorString;
     });
   });
 });
