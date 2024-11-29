@@ -2,14 +2,16 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(to bottom, #fef8e1, #87ceeb);
+  background: linear-gradient(to bottom, #fef8e1, #87ceeb); /* Lemonade and beach water */
   color: #333;
   overflow-x: hidden;
+  height: 100vh;
+  position: relative;
 }
 
 header {
   text-align: center;
-  background-color: #ffde59;
+  background-color: #ffde59; /* Lemonade color */
   padding: 2em 1em;
   color: #005f73;
 }
@@ -21,6 +23,28 @@ header h1 {
 
 header p {
   font-size: 1.2em;
+}
+
+/* Sections */
+section {
+  padding: 4em 1em;
+  text-align: center;
+}
+
+section:nth-child(even) {
+  background-color: rgba(135, 206, 235, 0.2); /* Light beach water color */
+}
+
+h2 {
+  font-size: 2em;
+  color: #005f73;
+}
+
+footer {
+  text-align: center;
+  background-color: #005f73;
+  color: white;
+  padding: 1em;
 }
 
 /* Animated Drops */
@@ -36,34 +60,12 @@ header p {
 
 .drop {
   position: absolute;
-  background-color: #ffde59;
+  background-color: #ffde59; /* Lemonade yellow */
   border-radius: 50%;
-  animation: drop-animation 5s infinite;
+  opacity: 0.7;
+  animation: drop-animation 3s infinite;
 }
 
-/* Sections */
-section {
-  padding: 4em 1em;
-  text-align: center;
-}
-
-section:nth-child(even) {
-  background-color: rgba(135, 206, 235, 0.2);
-}
-
-h2 {
-  font-size: 2em;
-  color: #005f73;
-}
-
-footer {
-  text-align: center;
-  background-color: #005f73;
-  color: white;
-  padding: 1em;
-}
-
-/* Animations */
 @keyframes drop-animation {
   0% {
     transform: translateY(0) scale(1);
@@ -73,5 +75,11 @@ footer {
   }
   100% {
     transform: translateY(-1000px) scale(0.8);
+  }
+}
+
+@media (min-width: 768px) {
+  .drop {
+    animation-duration: 4s;
   }
 }
