@@ -12,7 +12,7 @@ document.addEventListener('mousedown', () => {
     cursor.classList.add('active');
 });
 
-document.addEventListener('mouseup', () => {
+document.addEventListener('mouseup', () => { 
     cursor.classList.remove('active');
 });
 
