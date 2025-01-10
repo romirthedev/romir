@@ -275,28 +275,33 @@ class App {
                 e.preventDefault();
                 const target = document.querySelector(anchor.getAttribute('href'));
                 if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+                    window.scrollTo({
+                        top: target.offsetTop,
+                        behavior: 'smooth'
                     });
                 }
             });
         });
     }
 
-    animate(timestamp) {
+    animate() {
+        const now = performance.now();
+        const deltaTime = now - (this.lastTime || now);
+        this.lastTime = now;
+
         this.perfMonitor.update();
-        this.webglBackground.render(timestamp);
-        requestAnimationFrame((t) => this.animate(t));
+        this.webglBackground.render(deltaTime);
+
+        requestAnimationFrame(() => this.animate());
     }
 }
 
-// Utility Functions
-function lerp(start, end, factor) {
-    return start * (1 - factor) + end * factor;
+// Linear interpolation function
+function lerp(start, end, amount) {
+    return start + (end - start) * amount;
 }
 
-// Initialize app when DOM is loaded
+// Initialize the app when the DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    const app = new App();
+    new App();
 });
