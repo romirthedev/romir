@@ -1,194 +1,220 @@
-// Cursor glow effect
-document.addEventListener('mousemove', (e) => {
-    const cursor = document.getElementById('cursor-glow');
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top = e.clientY + 'px';
-});
-
-// Typing effect for About section
-const aboutText = "I am a passionate leader and innovator with experience spanning technology, research, and business strategy. My work at MIT focused on breakthrough technologies that are shaping our future, while my role as CEO allows me to drive meaningful change in the industry.";
-let typeIdx = 0;
-
-function typeWriter() {
-    if (typeIdx < aboutText.length) {
-        document.getElementById("typing-text").innerHTML += aboutText.charAt(typeIdx);
-        typeIdx++;
-        setTimeout(typeWriter, 50);
-    }
-}
-
-// Intersection Observer for scroll animations
-const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            if (entry.target.id === 'about') {
-                typeWriter();
-            }
-            entry.target.classList.add('fade-in');
-        }
-    });
-}, { threshold: 0.5 });
-
-document.querySelectorAll('section').forEach(section => {
-    observer.observe(section);
-});
-
-// Timeline interactions
-document.querySelectorAll('.timeline-item').forEach(item => {
-    item.addEventListener('click', () => {
-        const details = item.querySelector('.details');
-        const wasExpanded = item.classList.contains('expanded');
-        
-        // Reset all items
-        document.querySelectorAll('.timeline-item').forEach(i => {
-            i.classList.remove('expanded');
-            i.querySelector('.details').style.display = 'none';
-        });
-
-        // Toggle clicked item
-        if (!wasExpanded) {
-            item.classList.add('expanded');
-            details.style.display = 'block';
-        }
-    });
-});
-
-// Particle.js configurations
-particlesJS('particles-js', {
-    particles: {
-        number: { value: 80 },
-        color: { value: '#a855f7' },
-        shape: { type: 'circle' },
-        opacity: {
-            value: 0.5,
-            random: true
-        },
-        size: {
-            value: 3,
-            random: true
-        },
-        move: {
-            enable: true,
-            speed: 2
-        },
-        line_linked: {
-            enable: true,
-            color: '#a855f7',
-            opacity: 0.2
-        }
-    }
-});
-
-particlesJS('particles-js-2', {
-    // Similar configuration with different values
-    particles: {
-        number: { value: 40 },
-        color: { value: '#d8b4fe' },
-        shape: { type: 'circle' },
-        opacity: {
-            value: 0.3,
-            random: true
-        },
-        size: {
-            value: 4,
-            random: true
-        },
-        move: {
-            enable: true,
-            speed: 1.5
-        },
-        line_linked: {
-            enable: false
-        }
-    }
-});
-
-particlesJS('particles-js-3', {
-    particles: {
-        number: { value: 100 },
-        color: { value: '#a855f7' },
-        shape: { type: 'circle' },
-        opacity: {
-            value: 0.4,
-            random: true
-        },
-        size: {
-            value: 2,
-            random: true
-        },
-        move: {
-            enable: true,
-            speed: 1
-        },
-        line_linked: {
-            enable: true,
-            color: '#d8b4fe',
-            opacity: 0.3,
-            width: 1
-        }
-    }
-});
-
-// Möbius strip using Three.js
+// Initialize Three.js scene
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ alpha: true });
+const renderer = new THREE.WebGLRenderer({
+    canvas: document.querySelector('#bg'),
+    alpha: true
+});
+
+renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
-document.getElementById('mobius-container').appendChild(renderer.domElement);
+camera.position.setZ(30);
 
-// Create two Möbius strips
-function createMobiusStrip(radius, tubeRadius, color) {
-    const geometry = new THREE.ParametricGeometry((u, v, target) => {
-        u *= Math.PI * 2;
-        v *= 2;
+// Create multiple particle systems with different behaviors
+class ParticleSystem {
+    constructor(count, color, size, speed, behavior) {
+        this.geometry = new THREE.BufferGeometry();
+        this.positions = new Float32Array(count * 3);
+        this.velocities = new Float32Array(count * 3);
+        this.speed = speed;
+        this.behavior = behavior;
+
+        for(let i = 0; i < count * 3; i += 3) {
+            this.positions[i] = (Math.random() - 0.5) * 100;
+            this.positions[i + 1] = (Math.random() - 0.5) * 100;
+            this.positions[i + 2] = (Math.random() - 0.5) * 100;
+
+            this.velocities[i] = (Math.random() - 0.5) * speed;
+            this.velocities[i + 1] = (Math.random() - 0.5) * speed;
+            this.velocities[i + 2] = (Math.random() - 0.5) * speed;
+        }
+
+        this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
         
-        const x = (radius + tubeRadius * Math.cos(v)) * Math.cos(u);
-        const y = (radius + tubeRadius * Math.cos(v)) * Math.sin(u);
-        const z = tubeRadius * Math.sin(v);
-        
-        target.set(x, y, z);
-    }, 100, 20);
+        this.material = new THREE.PointsMaterial({
+            size,
+            color,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
+        });
 
-    const material = new THREE.MeshPhongMaterial({
-        color: color,
-        side: THREE.DoubleSide,
-        transparent: true,
-        opacity: 0.7
-    });
+        this.points = new THREE.Points(this.geometry, this.material);
+        scene.add(this.points);
+    }
 
-    return new THREE.Mesh(geometry, material);
+    update(time) {
+        const positions = this.geometry.attributes.position.array;
+
+        for(let i = 0; i < positions.length; i += 3) {
+            switch(this.behavior) {
+                case 'spiral':
+                    positions[i] += Math.sin(time * 0.001 + i) * this.speed * 0.1;
+                    positions[i + 1] += Math.cos(time * 0.001 + i) * this.speed * 0.1;
+                    positions[i + 2] += this.velocities[i + 2];
+                    break;
+                case 'wave':
+                    positions[i] += this.velocities[i];
+                    positions[i + 1] += Math.sin(time * 0.001 + positions[i] * 0.1) * this.speed * 0.1;
+                    positions[i + 2] += this.velocities[i + 2];
+                    break;
+                case 'vortex':
+                    const angle = Math.atan2(positions[i], positions[i + 2]);
+                    const radius = Math.sqrt(positions[i] ** 2 + positions[i + 2] ** 2);
+                    positions[i] = Math.cos(angle + time * 0.001) * radius;
+                    positions[i + 2] = Math.sin(angle + time * 0.001) * radius;
+                    positions[i + 1] += this.velocities[i + 1];
+                    break;
+            }
+
+            // Reset particles that go out of bounds
+            if(Math.abs(positions[i]) > 50) positions[i] *= -0.9;
+            if(Math.abs(positions[i + 1]) > 50) positions[i + 1] *= -0.9;
+            if(Math.abs(positions[i + 2]) > 50) positions[i + 2] *= -0.9;
+        }
+
+        this.geometry.attributes.position.needsUpdate = true;
+    }
 }
 
-const mobius1 = createMobiusStrip(3, 0.5, 0xa855f7);
-const mobius2 = createMobiusStrip(2.5, 0.3, 0xd8b4fe);
+// Create different particle systems
+const particleSystems = [
+    new ParticleSystem(1000, 0x6C63FF, 0.05, 0.1, 'spiral'),
+    new ParticleSystem(800, 0x4CAF50, 0.03, 0.15, 'wave'),
+    new ParticleSystem(600, 0xFF6B6B, 0.04, 0.12, 'vortex')
+];
 
-scene.add(mobius1);
-scene.add(mobius2);
+// Create floating 3D objects
+const createFloatingObject = (geometry, material, position) => {
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(...position);
+    scene.add(mesh);
+    return mesh;
+};
 
-// Add lights
-const light = new THREE.PointLight(0xffffff, 1);
-light.position.set(5, 5, 5);
-scene.add(light);
+const objects = [
+    createFloatingObject(
+        new THREE.TorusGeometry(3, 1, 16, 100),
+        new THREE.MeshStandardMaterial({ color: 0x6C63FF, wireframe: true }),
+        [10, 5, -5]
+    ),
+    createFloatingObject(
+        new THREE.IcosahedronGeometry(2),
+        new THREE.MeshStandardMaterial({ color: 0x4CAF50, wireframe: true }),
+        [-8, -4, -10]
+    ),
+    createFloatingObject(
+        new THREE.OctahedronGeometry(2),
+        new THREE.MeshStandardMaterial({ color: 0xFF6B6B, wireframe: true }),
+        [6, -8, -15]
+    )
+];
 
-const ambientLight = new THREE.AmbientLight(0x404040);
+// Add ambient and point lights
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
 
-camera.position.z = 10;
+const pointLights = [
+    new THREE.PointLight(0x6C63FF, 1),
+    new THREE.PointLight(0x4CAF50, 1),
+    new THREE.PointLight(0xFF6B6B, 1)
+];
+
+pointLights[0].position.set(5, 5, 5);
+pointLights[1].position.set(-5, -5, 5);
+pointLights[2].position.set(0, 0, -5);
+
+pointLights.forEach(light => scene.add(light));
+
+// Custom cursor with trail effect
+const cursor = document.getElementById('cursor');
+const cursorBlur = document.getElementById('cursor-blur');
+let mouseX = 0;
+let mouseY = 0;
+let cursorX = 0;
+let cursorY = 0;
+
+document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+});
+
+// Scroll-based scene changes
+let currentSection = '';
+const updateBackground = () => {
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        if(rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2) {
+            if(currentSection !== section.id) {
+                currentSection = section.id;
+                updateSceneForSection(currentSection);
+            }
+        }
+    });
+};
+
+const updateSceneForSection = (sectionId) => {
+    const transitions = {
+        hero: () => {
+            camera.position.z = 30;
+            scene.background = new THREE.Color(0x1a1a1a);
+        },
+        about: () => {
+            camera.position.z = 25;
+            scene.background = new THREE.Color(0x2a1a4a);
+        },
+        experience: () => {
+            camera.position.z = 20;
+            scene.background = new THREE.Color(0x1a2a4a);
+        },
+        unique: () => {
+            camera.position.z = 15;
+            scene.background = new THREE.Color(0x4a1a2a);
+        },
+        contact: () => {
+            camera.position.z = 10;
+            scene.background = new THREE.Color(0x2a4a1a);
+        }
+    };
+
+    if(transitions[sectionId]) {
+        gsap.to(camera.position, {
+            ...transitions[sectionId](),
+            duration: 1.5,
+            ease: 'power2.inOut'
+        });
+    }
+};
 
 // Animation loop
-function animate() {
+const animate = (time) => {
     requestAnimationFrame(animate);
-    
-    mobius1.rotation.x += 0.01;
-    mobius1.rotation.y += 0.01;
-    
-    mobius2.rotation.x -= 0.01;
-    mobius2.rotation.y -= 0.01;
-    
-    renderer.render(scene, camera);
-}
 
-animate();
+    // Update particle systems
+    particleSystems.forEach(system => system.update(time));
+
+    // Animate floating objects
+    objects.forEach((obj, i) => {
+        obj.rotation.x += 0.001 + i * 0.001;
+        obj.rotation.y += 0.002 + i * 0.001;
+        obj.position.y += Math.sin(time * 0.001 + i) * 0.02;
+    });
+
+    // Smooth cursor movement
+    cursorX += (mouseX - cursorX) * 0.1;
+    cursorY += (mouseY - cursorY) * 0.1;
+    cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px)`;
+    cursorBlur.style.transform = `translate(${cursorX - 20}px, ${cursorY - 20}px)`;
+
+    // Update lights
+    pointLights.forEach((light, i) => {
+        light.position.x = Math.sin(time * 0.001 + i * Math.PI * 2 / 3) * 10;
+        light.position.y = Math.cos(time * 0.001 + i * Math.PI * 2 / 3) * 10;
+    });
+
+    renderer.render(scene, camera);
+};
 
 // Handle window resize
 window.addEventListener('resize', () => {
@@ -196,3 +222,26 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+// Handle scroll events
+window.addEventListener('scroll', updateBackground);
+
+// Initialize animations
+gsap.registerPlugin(ScrollTrigger);
+
+// Animate sections on scroll
+gsap.utils.toArray('section').forEach(section => {
+    gsap.from(section, {
+        opacity: 0,
+        y: 100,
+        duration: 1,
+        scrollTrigger: {
+            trigger: section,
+            start: 'top center+=200',
+            once: true
+        }
+    });
+});
+
+// Start animation loop
+animate(0);
