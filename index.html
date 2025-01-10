@@ -3,148 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio</title>
+    <title>Frontend Engineering Portfolio</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/ScrollTrigger.min.js"></script>
 </head>
 <body>
-    <div id="cursor"></div>
-    <div id="cursor-blur"></div>
-    <canvas id="bg"></canvas>
+    <div class="perf-stats" id="perf-stats"></div>
     
-    <div class="noise-overlay"></div>
+    <div class="loading-screen">
+        <div class="loading-progress"></div>
+    </div>
+
+    <canvas id="webgl-background"></canvas>
     
     <main>
-        <header>
-            <nav>
-                <ul>
-                    <li><a href="#hero" class="nav-link">Home</a></li>
-                    <li><a href="#about" class="nav-link">About</a></li>
-                    <li><a href="#experience" class="nav-link">Experience</a></li>
-                    <li><a href="#unique" class="nav-link">Uniqueness</a></li>
-                    <li><a href="#contact" class="nav-link">Contact</a></li>
-                </ul>
-            </nav>
-        </header>
-
-        <section id="hero" class="scene">
-            <div class="floating-elements">
-                <div class="floating-cube"></div>
-                <div class="floating-sphere"></div>
-                <div class="floating-pyramid"></div>
+        <nav class="nav-container">
+            <div class="nav-tracker"></div>
+            <div class="performance-indicator">
+                <span class="fps">60 FPS</span>
+                <span class="memory">0 MB</span>
             </div>
-            <h1 class="glitch-text">Your Name</h1>
-            <p class="subtitle">Software Engineer & Creative Developer</p>
-            <div class="scroll-indicator">
-                <div class="mouse"></div>
-                <span>Scroll to Explore</span>
+        </nav>
+
+        <section id="intro" class="section">
+            <div class="content-grid">
+                <h1 class="glitch-text" data-text="Frontend Engineer">Frontend Engineer</h1>
+                <div class="tech-stack">
+                    <div class="stack-item" data-tech="react">React</div>
+                    <div class="stack-item" data-tech="typescript">TypeScript</div>
+                    <div class="stack-item" data-tech="webgl">WebGL</div>
+                </div>
             </div>
         </section>
 
-        <section id="about" class="scene">
-            <div class="section-content">
-                <h2 class="section-title">About Me</h2>
-                <div class="about-grid">
-                    <div class="about-text">
-                        <p class="animated-text">Your compelling story goes here...</p>
-                        <div class="floating-tech-stack">
-                            <div class="tech-item">React</div>
-                            <div class="tech-item">Node.js</div>
-                            <div class="tech-item">Python</div>
-                            <div class="tech-item">AWS</div>
-                        </div>
-                    </div>
-                    <div class="skills-container">
-                        <div class="skill-item" data-skill="JavaScript">
-                            <div class="skill-progress"></div>
-                            <div class="skill-particles"></div>
-                        </div>
-                        <!-- Add more skills -->
+        <section id="experience" class="section">
+            <div class="content-grid">
+                <div class="performance-demo">
+                    <div class="virtual-list" id="virtualScroll">
+                        <!-- Dynamic content rendered via JavaScript -->
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="experience" class="scene">
-            <div class="section-content">
-                <h2 class="section-title">Experience</h2>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-content">
-                            <div class="experience-card">
-                                <div class="card-front">
-                                    <h3>Senior Software Engineer</h3>
-                                    <h4>Company Name</h4>
-                                </div>
-                                <div class="card-back">
-                                    <p>Description of your role and achievements...</p>
-                                </div>
-                            </div>
-                        </div>
+        <section id="projects" class="section">
+            <div class="content-grid">
+                <div class="shader-demo">
+                    <canvas id="fragment-shader"></canvas>
+                    <div class="shader-controls">
+                        <input type="range" id="noiseScale" min="0" max="100" value="50">
+                        <input type="range" id="timeScale" min="0" max="100" value="50">
                     </div>
-                    <!-- Add more experience items -->
-                </div>
-            </div>
-            <div class="floating-code-particles"></div>
-        </section>
-
-        <section id="unique" class="scene">
-            <div class="section-content">
-                <h2 class="section-title">What Makes Me Unique</h2>
-                <div class="cards-container">
-                    <div class="unique-card">
-                        <div class="card-3d-wrap">
-                            <div class="card-3d-wrapper">
-                                <div class="card-front">
-                                    <h3>Innovation</h3>
-                                </div>
-                                <div class="card-back">
-                                    <p>Description of your unique qualities...</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Add more cards -->
                 </div>
             </div>
         </section>
 
-        <section id="contact" class="scene">
-            <div class="section-content">
-                <h2 class="section-title">Let's Connect</h2>
-                <div class="contact-container">
-                    <div class="contact-form">
-                        <form id="contact-form">
-                            <div class="input-wrapper">
-                                <input type="text" placeholder="Name" required>
-                                <div class="input-particles"></div>
-                            </div>
-                            <div class="input-wrapper">
-                                <input type="email" placeholder="Email" required>
-                                <div class="input-particles"></div>
-                            </div>
-                            <div class="input-wrapper">
-                                <textarea placeholder="Message" required></textarea>
-                                <div class="input-particles"></div>
-                            </div>
-                            <button type="submit" class="animated-button">
-                                <span>Send Message</span>
-                                <div class="button-particles"></div>
-                            </button>
-                        </form>
-                    </div>
-                    <div class="social-links">
-                        <div class="social-cube">
-                            <!-- Add your social media links with 3D rotation -->
+        <section id="metrics" class="section">
+            <div class="content-grid">
+                <div class="performance-metrics">
+                    <canvas id="metrics-canvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section">
+            <div class="content-grid">
+                <div class="contact-form">
+                    <form id="contact-form" class="form-with-validation">
+                        <div class="input-group">
+                            <input type="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+                            <span class="validation-indicator"></span>
                         </div>
-                    </div>
+                        <button type="submit">
+                            <span class="button-text">Send</span>
+                            <span class="button-loader"></span>
+                        </button>
+                    </form>
                 </div>
             </div>
         </section>
     </main>
 
-    <script src="scripts.js"></script>
+    <script type="module" src="scripts.js"></script>
 </body>
 </html>
