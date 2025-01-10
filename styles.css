@@ -198,6 +198,18 @@ body {
     font-size: 1.5rem;
 }
 
+.cursor-trailer {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--primary-color);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+    transform: translate(-50%, -50%);
+}
+
 .skill-tags {
     display: flex;
     flex-wrap: wrap;
