@@ -1,91 +1,171 @@
+// index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Frontend Engineering Portfolio</title>
+    <title>Space Portfolio</title>
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.158.0/three.min.js"></script>
+    <!-- Custom Styles -->
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/ScrollTrigger.min.js"></script>
 </head>
 <body>
-    <div class="perf-stats" id="perf-stats"></div>
+    <!-- Background Canvas for Stars -->
+    <canvas class="stars"></canvas>
     
-    <div class="loading-screen">
-        <div class="loading-progress"></div>
-    </div>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-links">
+            <a href="#home" class="nav-link">Home</a>
+            <a href="#about" class="nav-link">About</a>
+            <a href="#projects" class="nav-link">Projects</a>
+            <a href="#contact" class="nav-link">Contact</a>
+        </div>
+    </nav>
 
-    <canvas id="webgl-background"></canvas>
-    
-    <main>
-        <nav class="nav-container">
-            <div class="nav-tracker"></div>
-            <div class="performance-indicator">
-                <span class="fps">60 FPS</span>
-                <span class="memory">0 MB</span>
+    <!-- Decorative Planet -->
+    <div class="planet"></div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>John Doe</h1>
+            <p class="hero-subtitle">Full Stack Developer & Space Enthusiast</p>
+            <div class="hero-cta">
+                <a href="#projects" class="btn primary-btn">View Projects</a>
+                <a href="#contact" class="btn secondary-btn">Contact Me</a>
             </div>
-        </nav>
+        </div>
+    </section>
 
-        <section id="intro" class="section">
-            <div class="content-grid">
-                <h1 class="glitch-text" data-text="Frontend Engineer">Frontend Engineer</h1>
-                <div class="tech-stack">
-                    <div class="stack-item" data-tech="react">React</div>
-                    <div class="stack-item" data-tech="typescript">TypeScript</div>
-                    <div class="stack-item" data-tech="webgl">WebGL</div>
-                </div>
-            </div>
-        </section>
-
-        <section id="experience" class="section">
-            <div class="content-grid">
-                <div class="performance-demo">
-                    <div class="virtual-list" id="virtualScroll">
-                        <!-- Dynamic content rendered via JavaScript -->
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="projects" class="section">
-            <div class="content-grid">
-                <div class="shader-demo">
-                    <canvas id="fragment-shader"></canvas>
-                    <div class="shader-controls">
-                        <input type="range" id="noiseScale" min="0" max="100" value="50">
-                        <input type="range" id="timeScale" min="0" max="100" value="50">
-                    </div>
-                </div>
-            </div> 
-        </section>
-
-        <section id="metrics" class="section">
-            <div class="content-grid">
-                <div class="performance-metrics">
-                    <canvas id="metrics-canvas"></canvas>
-                </div>
-            </div>
-        </section>
-
-        <section id="contact" class="section">
-            <div class="content-grid">
-                <div class="contact-form">
-                    <form id="contact-form" class="form-with-validation">
-                        <div class="input-group">
-                            <input type="email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
-                            <span class="validation-indicator"></span>
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>I'm a passionate full-stack developer with expertise in modern web technologies and a deep fascination with space exploration. Through my work, I aim to create digital experiences that are both beautiful and functional.</p>
+                    <div class="skills">
+                        <h3>Technical Skills</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">React</span>
+                            <span class="skill-tag">Node.js</span>
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">AWS</span>
                         </div>
-                        <button type="submit">
-                            <span class="button-text">Send</span>
-                            <span class="button-loader"></span>
-                        </button>
-                    </form>
+                    </div>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
-    <script type="module" src="scripts.js"></script>
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+        <div class="container">
+            <h2 class="section-title">Projects</h2>
+            <div class="projects">
+                <article class="project-card">
+                    <div class="project-content">
+                        <h3>Stellar Navigation</h3>
+                        <p>A real-time space visualization tool built with Three.js and WebGL.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Three.js</span>
+                            <span class="tech-tag">WebGL</span>
+                            <span class="tech-tag">React</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">View Project</a>
+                            <a href="#" class="project-link">Source Code</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-content">
+                        <h3>Galaxy Explorer</h3>
+                        <p>An interactive database of celestial objects with real-time updates.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Node.js</span>
+                            <span class="tech-tag">MongoDB</span>
+                            <span class="tech-tag">Socket.io</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">View Project</a>
+                            <a href="#" class="project-link">Source Code</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-content">
+                        <h3>Cosmic Dashboard</h3>
+                        <p>Real-time data visualization dashboard for space mission analytics.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">React</span>
+                            <span class="tech-tag">D3.js</span>
+                            <span class="tech-tag">GraphQL</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">View Project</a>
+                            <a href="#" class="project-link">Source Code</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <div class="container">
+            <h2 class="section-title">Contact Me</h2>
+            <div class="contact-content">
+                <form class="contact-form" id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn primary-btn">Send Message</button>
+                </form>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <h3>Email</h3>
+                        <p>hello@johndoe.com</p>
+                    </div>
+                    <div class="contact-item">
+                        <h3>Location</h3>
+                        <p>San Francisco, CA</p>
+                    </div>
+                    <div class="social-links">
+                        <a href="#" class="social-link">GitHub</a>
+                        <a href="#" class="social-link">LinkedIn</a>
+                        <a href="#" class="social-link">Twitter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 John Doe. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Custom Scripts -->
+    <script src="scripts.js"></script>
 </body>
 </html>
