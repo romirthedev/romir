@@ -3,76 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Romir - Personal Portfolio</title>
+    <title>Romir - Portfolio</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <div id="cursor-glow"></div>
+    <div id="cursor"></div>
     
-    <!-- Hero Section -->
-    <section id="hero">
-        <div id="particles-js"></div>
-        <div class="content fade-in">
-            <h1>Hello! I am Romir</h1>
-            <h2>CEO | MIT Researcher | Board Member</h2>
-        </div>
-    </section>
+    <main>
+        <!-- Hero Section -->
+        <section id="hero" class="section">
+            <div id="particles-js" class="particle-container"></div>
+            <div class="content">
+                <h1 class="fade-in">Hello! I am Romir</h1>
+                <h2 class="fade-in delay-1">CEO | MIT Researcher | Board Member</h2>
+            </div>
+        </section>
 
-    <!-- About Section -->
-    <section id="about">
-        <div id="particles-js-2"></div>
-        <div class="content">
-            <div id="typing-text"></div>
-        </div>
-    </section>
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div id="particles-js-2" class="particle-container"></div>
+            <div class="content">
+                <div id="typing-text" class="about-text"></div>
+            </div>
+        </section>
 
-    <!-- Timeline Section -->
-    <section id="timeline">
-        <div id="particles-js-3"></div>
-        <div class="timeline-container">
-            <div class="timeline-item" data-role="CEO at TechCorp">
-                <h3>CEO</h3>
-                <p class="date">2022 - Present</p>
-                <div class="details">
-                    <p>Leading technological innovation and strategic growth...</p>
+        <!-- Timeline Section -->
+        <section id="timeline" class="section">
+            <div id="particles-js-3" class="particle-container"></div>
+            <div class="content">
+                <div class="timeline-container">
+                    <div class="timeline-item" data-year="2022">
+                        <h3>CEO at TechCorp</h3>
+                        <div class="timeline-content">
+                            <p>Leading innovation and strategic growth initiatives...</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item" data-year="2020">
+                        <h3>MIT Researcher</h3>
+                        <div class="timeline-content">
+                            <p>Spearheaded breakthrough research in emerging technologies...</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item" data-year="2019">
+                        <h3>Board Member</h3>
+                        <div class="timeline-content">
+                            <p>Providing strategic guidance and oversight...</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="timeline-item" data-role="MIT Researcher">
-                <h3>MIT Researcher</h3>
-                <p class="date">2020 - 2022</p>
-                <div class="details">
-                    <p>Conducted groundbreaking research in...</p>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+            <div id="mobius-canvas"></div>
+            <div class="content">
+                <div class="contact-links">
+                    <a href="https://linkedin.com/in/yourprofile" class="contact-icon">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="tel:+1234567890" class="contact-icon">
+                        <i class="fas fa-phone"></i>
+                    </a>
+                    <a href="mailto:your.email@example.com" class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </a>
                 </div>
             </div>
-            <div class="timeline-item" data-role="Board Member">
-                <h3>Board Member</h3>
-                <p class="date">2019 - Present</p>
-                <div class="details">
-                    <p>Providing strategic oversight and guidance...</p>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <!-- Contact Section -->
-    <section id="contact">
-        <div id="mobius-container"></div>
-        <div class="contact-content">
-            <a href="https://linkedin.com/in/yourprofile" class="social-icon">
-                <i class="fab fa-linkedin"></i>
-            </a>
-            <a href="tel:+1234567890" class="social-icon">
-                <i class="fas fa-phone"></i>
-            </a>
-            <a href="mailto:your.email@example.com" class="social-icon">
-                <i class="fas fa-envelope"></i>
-            </a>
-        </div>
-    </section>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
-    <script src="scripts.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
