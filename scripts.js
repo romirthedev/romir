@@ -49,6 +49,57 @@ const initStarField = () => {
     handleResize();
     animate();
 };
+const createParticles = () => {
+    const particleCount = 30;
+    const container = document.querySelector('.hero');
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        container.appendChild(particle);
+    }
+};
+
+const createOrbitalElements = () => {
+    const orbitalCount = 8;
+    const container = document.querySelector('.hero');
+    
+    for (let i = 0; i < orbitalCount; i++) {
+        const orbital = document.createElement('div');
+        orbital.className = 'orbital-element';
+        orbital.style.left = '50%';
+        orbital.style.top = '50%';
+        orbital.style.animationDelay = `${(i / orbitalCount) * 8}s`;
+        container.appendChild(orbital);
+    }
+};
+
+const createInteractiveBackground = () => {
+    const bg = document.createElement('div');
+    bg.className = 'interactive-bg';
+    document.body.appendChild(bg);
+
+    const glowCount = 3;
+    for (let i = 0; i < glowCount; i++) {
+        const glow = document.createElement('div');
+        glow.className = 'glow';
+        bg.appendChild(glow);
+    }
+
+    document.addEventListener('mousemove', (e) => {
+        const glows = document.querySelectorAll('.glow');
+        glows.forEach((glow, index) => {
+            const delay = index * 100;
+            setTimeout(() => {
+                glow.style.left = `${e.clientX - 75}px`;
+                glow.style.top = `${e.clientY - 75}px`;
+            }, delay);
+        });
+    });
+};
 
 // Scroll animations
 const initScrollAnimations = () => {
@@ -56,12 +107,12 @@ const initScrollAnimations = () => {
     gsap.to('.hero-content', {
         opacity: 1,
         y: 0,
-        duration: 1.5,
-        delay: 0.5,
+        duration: 1,
+        delay: 0.2,
         ease: 'power3.out'
     });
 
-    // Sections fade in
+    // Animated section entries
     gsap.utils.toArray('.section').forEach(section => {
         gsap.to(section, {
             opacity: 1,
@@ -69,13 +120,28 @@ const initScrollAnimations = () => {
             duration: 1,
             scrollTrigger: {
                 trigger: section,
-                start: 'top center+=100',
+                start: 'top bottom-=100',
+                end: 'bottom center',
+                scrub: 1,
                 toggleActions: 'play none none reverse'
             }
         });
     });
-};
 
+    // Animate skill tags
+    gsap.utils.toArray('.skill-tag').forEach((tag, i) => {
+        gsap.from(tag, {
+            scale: 0,
+            opacity: 0,
+            duration: 0.5,
+            delay: i * 0.1,
+            scrollTrigger: {
+                trigger: '.skills',
+                start: 'top center+=100'
+            }
+        });
+    });
+};
 // Navigation handling
 const initNavigation = () => {
     const nav = document.querySelector('.nav');
@@ -113,19 +179,54 @@ const initNavigation = () => {
 };
 
 // Project cards interaction
-const initProjectCards = () => {
-    document.querySelectorAll('.project-card').forEach(card => {
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            card.style.background = `radial-gradient(circle at ${x}px ${y}px, 
-                rgba(255,255,255,0.1), rgba(255,255,255,0.05))`;
-        });
-        
-        card.addEventListener('mouseleave', () => {
-            card.style.background = 'rgba(255,255,255,0.05)';
+const createParticles = () => {
+    const particleCount = 30;
+    const container = document.querySelector('.hero');
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        container.appendChild(particle);
+    }
+};
+
+const createOrbitalElements = () => {
+    const orbitalCount = 8;
+    const container = document.querySelector('.hero');
+    
+    for (let i = 0; i < orbitalCount; i++) {
+        const orbital = document.createElement('div');
+        orbital.className = 'orbital-element';
+        orbital.style.left = '50%';
+        orbital.style.top = '50%';
+        orbital.style.animationDelay = `${(i / orbitalCount) * 8}s`;
+        container.appendChild(orbital);
+    }
+};
+
+const createInteractiveBackground = () => {
+    const bg = document.createElement('div');
+    bg.className = 'interactive-bg';
+    document.body.appendChild(bg);
+
+    const glowCount = 3;
+    for (let i = 0; i < glowCount; i++) {
+        const glow = document.createElement('div');
+        glow.className = 'glow';
+        bg.appendChild(glow);
+    }
+
+    document.addEventListener('mousemove', (e) => {
+        const glows = document.querySelectorAll('.glow');
+        glows.forEach((glow, index) => {
+            const delay = index * 100;
+            setTimeout(() => {
+                glow.style.left = `${e.clientX - 75}px`;
+                glow.style.top = `${e.clientY - 75}px`;
+            }, delay);
         });
     });
 };
@@ -157,9 +258,24 @@ const initParallaxEffects = () => {
         });
     });
 };
+const addCursorTrailer = () => {
+    const trailer = document.createElement('div');
+    trailer.className = 'cursor-trailer';
+    document.body.appendChild(trailer);
 
-// Initialize everything when DOM is loaded
+    window.addEventListener('mousemove', (e) => {
+        gsap.to(trailer, {
+            x: e.clientX,
+            y: e.clientY,
+            duration: 0.3,
+            ease: 'power2.out'
+        });
+    });
+};
 document.addEventListener('DOMContentLoaded', () => {
+    createParticles();
+    createOrbitalElements();
+    createInteractiveBackground();
     initStarField();
     initScrollAnimations();
     initNavigation();
