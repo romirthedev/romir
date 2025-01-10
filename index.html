@@ -1,170 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Personal Site</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romir - Personal Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
 </head>
 <body>
-  <header>
-    <h1>Welcome! I am Romir Patel!</h1>
-    <p>Researcher @ MIT | Raised 500k+, Google, Microsoft, Amazon | Audience of 270k+</p>
-  </header>
-
-  <section id="who-am-i">
-    <h2>Who Am I?</h2>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum at malesuada velit. Ut pulvinar sapien non augue ultricies, vel scelerisque arcu fringilla. Nam aliquam justo nec viverra aliquet. Nullam id risus id felis sollicitudin aliquet. Cras eget elit id libero fermentum tempus. Sed ut libero id metus malesuada vehicula.
-    </p>
-    <p>
-      Pellentesque a dapibus neque. Nam pharetra sagittis augue, sed feugiat risus. Ut feugiat lacus id lectus ultrices, ac sodales justo tristique. Cras feugiat, nisl at tincidunt aliquam, metus nisl gravida sapien, et hendrerit neque erat et nulla. Donec finibus vestibulum arcu, quis malesuada turpis vehicula id. Mauris efficitur, velit quis vehicula consequat, dolor sem auctor ipsum, vel ultrices elit elit id lorem.
-    </p>
-  </section>
-<!--
- <section id="my-experience">
-    <h2>My Experience</h2>
-    <p>
-        I have had the unique opportunity to hold various roles, from CEO to Software Engineer. I have worked in various corporations, foundations, non-profits, and educational institutions. You can view a detailed timeline of my work experience below.
-    </p>
-
-    <p>
-        <b>CEO @ Helping Hands Corporation | 2022-Present</b><br />
-        &emsp;• Founded the organization, led over 200+ volunteers, reached over 250,000 individuals without social media<br />
-        &emsp;• Developed an English learning program, impacting over 2,500 individuals in 25+ nations. Raised a total over $480,000<br />
-        &emsp;• Raised funding from Amazon(AWS), Google, and Microsoft(Azure)<br />
-        &emsp;• Led recruitment from Stanford, Duke, Brown, USC, Berkeley, CMU, and other universities
-    </p>
-
-    <p>
-        <b>CEO @ Benevolentia | 2023-Present</b><br />
-        &emsp;• Led a team of software developers, worked to make a MERN stack application<br />
-        &emsp;• Allowed for individuals to have access to jobs specifically tailored for them, focusing on High School graduates<br />
-        &emsp;• Developing an in-house Machine Learning model to analyze user site activity to provide likely application recommendations
-    </p>
-
-    <p>
-        <b>Board Member @ KeelWorks | 2023-Present</b><br />
-        &emsp;• Initially joined as a Project Manager, eventually joining the Board of Directors<br />
-        &emsp;• Provided technical expertise, consolidating software stacks, working with most technical PMs for software projects
-    </p>
-
-    <p>
-        <b>CEO @ ResearcHive | 2024-Present</b><br />
-        &emsp;• Led a team to develop an application targeted at giving student researchers an unprecedented number of opportunities<br />
-        &emsp;• Employed multiple staff & interns, used a MERN stack, currently providing demos to universities across various states
-    </p>
-
-    <p>
-        <b>Researcher @ Arizona State University(ASU) | 2024-Present</b><br />
-        &emsp;• Worked under Professor Gowda, developed a Motion Capture system from scratch that was accurate & affordable, using IMUs and sensor fusion algorithms<br />
-        &emsp;• Developed the project site and assisted with development & testing stages of the system. Used Java, C, HTML/CSS, Arduino
-    </p>
-
-    <p>
-        <b>Researcher @ Massachusetts Institute of Technology(MIT), Department of Chemistry | 2024-Present</b><br />
-        &emsp;• Working within the Raines Lab. Worked as a part of a classified project on the software and modeling aspect
-    </p>
-
-    <p>
-        <b>Researcher @ Massachusetts Institute of Technology(MIT), Department of Engineering | 2024-Present</b><br />
-        &emsp;• Working on research related to Bayesian Inference along with Artificial Intelligence and Machine Learning
-    </p>
-</section>
-
--->
-<section id="my-experience">
-    <h2>My Experience</h2>
-    <p>
-        My career has been diverse, ranging from CEO to Researcher. Below is a showcase of my professional journey and key achievements:
-    </p>
-
-    <div class="experience-grid">
-        <div class="experience-card">
-            <h3>CEO @ Helping Hands Corporation <span>| 2022-Present</span></h3>
-            <ul>
-                <li>Founded the organization, leading 200+ volunteers to impact 250,000 individuals.</li>
-                <li>Developed an English learning program reaching 2,500+ individuals in 25 nations.</li>
-                <li>Raised $480,000+ in funding from Amazon (AWS), Google, and Microsoft (Azure).</li>
-                <li>Recruited talent from Stanford, Duke, Brown, and other top universities.</li>
-            </ul>
+    <div id="cursor-glow"></div>
+    
+    <!-- Hero Section -->
+    <section id="hero">
+        <div id="particles-js"></div>
+        <div class="content fade-in">
+            <h1>Hello! I am Romir</h1>
+            <h2>CEO | MIT Researcher | Board Member</h2>
         </div>
+    </section>
 
-        <div class="experience-card">
-            <h3>CEO @ Benevolentia <span>| 2023-Present</span></h3>
-            <ul>
-                <li>Led a team of developers to create a MERN stack job application platform.</li>
-                <li>Implemented machine learning for personalized job recommendations.</li>
-            </ul>
+    <!-- About Section -->
+    <section id="about">
+        <div id="particles-js-2"></div>
+        <div class="content">
+            <div id="typing-text"></div>
         </div>
+    </section>
 
-        <div class="experience-card">
-            <h3>Board Member @ KeelWorks <span>| 2023-Present</span></h3>
-            <ul>
-                <li>Promoted from Project Manager to Board Member for technical expertise.</li>
-                <li>Oversaw software projects and consolidated technical stacks.</li>
-            </ul>
+    <!-- Timeline Section -->
+    <section id="timeline">
+        <div id="particles-js-3"></div>
+        <div class="timeline-container">
+            <div class="timeline-item" data-role="CEO at TechCorp">
+                <h3>CEO</h3>
+                <p class="date">2022 - Present</p>
+                <div class="details">
+                    <p>Leading technological innovation and strategic growth...</p>
+                </div>
+            </div>
+            <div class="timeline-item" data-role="MIT Researcher">
+                <h3>MIT Researcher</h3>
+                <p class="date">2020 - 2022</p>
+                <div class="details">
+                    <p>Conducted groundbreaking research in...</p>
+                </div>
+            </div>
+            <div class="timeline-item" data-role="Board Member">
+                <h3>Board Member</h3>
+                <p class="date">2019 - Present</p>
+                <div class="details">
+                    <p>Providing strategic oversight and guidance...</p>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="experience-card">
-            <h3>CEO @ ResearcHive <span>| 2024-Present</span></h3>
-            <ul>
-                <li>Developed a platform connecting student researchers with opportunities.</li>
-                <li>Provided demos to universities using a MERN stack architecture.</li>
-            </ul>
+    <!-- Contact Section -->
+    <section id="contact">
+        <div id="mobius-container"></div>
+        <div class="contact-content">
+            <a href="https://linkedin.com/in/yourprofile" class="social-icon">
+                <i class="fab fa-linkedin"></i>
+            </a>
+            <a href="tel:+1234567890" class="social-icon">
+                <i class="fas fa-phone"></i>
+            </a>
+            <a href="mailto:your.email@example.com" class="social-icon">
+                <i class="fas fa-envelope"></i>
+            </a>
         </div>
+    </section>
 
-        <div class="experience-card">
-            <h3>Researcher @ Arizona State University (ASU) <span>| 2024-Present</span></h3>
-            <ul>
-                <li>Created an affordable motion capture system using IMUs and sensor fusion.</li>
-                <li>Collaborated with Prof. Gowda, contributing to development and testing.</li>
-            </ul>
-        </div>
-
-        <div class="experience-card">
-            <h3>Researcher @ MIT, Department of Chemistry <span>| 2024-Present</span></h3>
-            <ul>
-                <li>Collaborated within the Raines Lab on software and modeling projects.</li>
-            </ul>
-        </div>
-
-        <div class="experience-card">
-            <h3>Researcher @ MIT, Department of Engineering <span>| 2024-Present</span></h3>
-            <ul>
-                <li>Focused on Bayesian Inference, AI, and Machine Learning research.</li>
-            </ul>
-        </div>
-    </div>
-</section>
-
-
-
-  <section id="contact">
-    <h2>Contact Me</h2>
-    <p>
-      Reach out to me anytime! Here's how you can get in touch:
-    </p>
-    <p>
-      Email: <a href="mailto:example@example.com">example@example.com</a><br>
-      Phone: (123) 456-7890<br>
-      Address: 123 Summer Drive, Beach Town, USA
-    </p>
-    <p>
-      Follow me on social media:<br>
-      <a href="#">Twitter</a> | <a href="#">LinkedIn</a> | <a href="#">GitHub</a>
-    </p>
-  </section>
-
-  <footer>
-    <p>© 2024 Your Name. All rights reserved.</p>
-  </footer>
-
-  <div class="animated-drops"></div>
-
-  <script src="scripts.js" defer></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
-
-
