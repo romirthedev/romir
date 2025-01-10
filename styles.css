@@ -1,5 +1,9 @@
-// styles.css
 /* Base Styles and Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 @keyframes orbital {
     0% { transform: rotate(0deg) translateX(20px) rotate(0deg); }
     100% { transform: rotate(360deg) translateX(20px) rotate(-360deg); }
@@ -22,115 +26,6 @@
     66% { transform: translateY(10px) rotate(-2deg); }
     100% { transform: translateY(0px) rotate(0deg); }
 }
-
-/* Update hero section styles */
-.hero {
-    min-height: 90vh; /* Reduced from 100vh */
-    padding-top: 80px; /* Added to account for fixed navbar */
-    position: relative;
-    overflow: hidden;
-}
-
-.hero-content {
-    position: relative;
-    z-index: 2;
-}
-
-.cursor-trailer {
-    position: fixed;
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--primary-color);
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.5;
-    transform: translate(-50%, -50%);
-}
-/* Add floating particles */
-.particle {
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    background: var(--primary-color);
-    border-radius: 50%;
-    pointer-events: none;
-    opacity: 0.5;
-    animation: floating 8s infinite;
-}
-
-/* Add orbital elements */
-.orbital-element {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background: var(--primary-color);
-    border-radius: 50%;
-    animation: orbital 8s linear infinite;
-}
-
-/* Update project cards */
-.project-card {
-    position: relative;
-    overflow: hidden;
-}
-
-.project-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 200%;
-    height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(100, 255, 218, 0.1),
-        transparent
-    );
-    animation: shimmer 3s infinite;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-.project-card:hover::before {
-    opacity: 1;
-}
-
-/* Add glow effects */
-.glow {
-    position: absolute;
-    width: 150px;
-    height: 150px;
-    background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
-    opacity: 0.1;
-    pointer-events: none;
-    transition: all 0.3s ease;
-}
-
-/* Update skill tags */
-.skill-tag {
-    position: relative;
-    overflow: hidden;
-    animation: pulse 3s infinite;
-}
-
-/* Add these at the end of your CSS file */
-.interactive-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-}
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 :root {
     /* Color Variables */
     --primary-color: #64ffda;
@@ -197,19 +92,36 @@ body {
 
 /* Hero Section */
 .hero {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 0 2rem;
+    min-height: 90vh; /* Reduced from 100vh */
+    padding-top: 80px; /* Added to account for fixed navbar */
+    position: relative;
+    overflow: hidden;
 }
 
 .hero-content {
-    opacity: 0;
-    transform: translateY(50px);
+    position: relative;
+    z-index: 2;
+}
+.particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0.5;
+    animation: floating 8s infinite;
 }
 
+/* Add orbital elements */
+.orbital-element {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    animation: orbital 8s linear infinite;
+}
 .hero h1 {
     font-size: 4.5rem;
     font-weight: 800;
@@ -293,11 +205,11 @@ body {
 }
 
 .skill-tag {
-    background: var(--card-background);
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    font-size: 0.9rem;
+    position: relative;
+    overflow: hidden;
+    animation: pulse 3s infinite;
 }
+
 
 /* Projects Section */
 .projects {
@@ -307,17 +219,41 @@ body {
     margin-top: 3rem;
 }
 
+/* Update project cards */
 .project-card {
-    background: var(--card-background);
-    border-radius: 15px;
-    padding: 2rem;
-    transition: var(--transition);
-    cursor: pointer;
+    position: relative;
+    overflow: hidden;
 }
 
-.project-card:hover {
-    transform: translateY(-10px);
-    background: var(--card-hover);
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(100, 255, 218, 0.1),
+        transparent
+    );
+    animation: shimmer 3s infinite;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.project-card:hover::before {
+    opacity: 1;
+}
+.glow {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+    opacity: 0.1;
+    pointer-events: none;
+    transition: all 0.3s ease;
 }
 
 .project-content h3 {
@@ -523,4 +459,13 @@ body {
         padding: 0.8rem 1.5rem;
         margin: 0.5rem;
     }
+.interactive-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
 }
