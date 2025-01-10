@@ -1,116 +1,198 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const dropContainer = document.querySelector(".animated-drops");
+// Cursor glow effect
+document.addEventListener('mousemove', (e) => {
+    const cursor = document.getElementById('cursor-glow');
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+});
 
-  // Create animated drops
-  function createDrops() {
-    for (let i = 0; i < 100; i++) {
-      const drop = document.createElement("div");
-      drop.classList.add("drop");
-      drop.style.width = `${Math.random() * 20 + 5}px`;
-      drop.style.height = `${Math.random() * 40 + 10}px`;
-      drop.style.left = `${Math.random() * 100}vw`;
-      drop.style.animationDuration = `${Math.random() * 5 + 2}s`;
-      drop.style.animationDelay = `${Math.random() * 3}s`; 
-      dropContainer.appendChild(drop);
+// Typing effect for About section
+const aboutText = "I am a passionate leader and innovator with experience spanning technology, research, and business strategy. My work at MIT focused on breakthrough technologies that are shaping our future, while my role as CEO allows me to drive meaningful change in the industry.";
+let typeIdx = 0;
+
+function typeWriter() {
+    if (typeIdx < aboutText.length) {
+        document.getElementById("typing-text").innerHTML += aboutText.charAt(typeIdx);
+        typeIdx++;
+        setTimeout(typeWriter, 50);
     }
-  }
+}
 
-  createDrops();
-
-  // Fade-in sections on scroll
-  const sections = document.querySelectorAll("section");
-
-  function checkVisibility() {
-    sections.forEach(section => {
-      const rect = section.getBoundingClientRect();
-      if (rect.top < window.innerHeight * 0.8) {
-        section.classList.add("visible");
-      }
-    });
-  }
-
-  // Check visibility on scroll and initial load
-  window.addEventListener("scroll", checkVisibility);
-  checkVisibility();
-
-  // Change drop colors on scroll
-  window.addEventListener("scroll", () => {
-    const drops = document.querySelectorAll(".drop");
-    const maxScroll = document.body.scrollHeight - window.innerHeight;
-    const scrollPercent = window.scrollY / maxScroll;
-
-    const interpolateColor = (start, end, factor) => {
-      return Math.round(start + (end - start) * factor);
-    };
-
-    const startColor = { r: 135, g: 206, b: 235 };
-    const endColor = { r: 255, g: 222, b: 89 };
-
-    const newColor = {
-      r: interpolateColor(startColor.r, endColor.r, scrollPercent),
-      g: interpolateColor(startColor.g, endColor.g, scrollPercent),
-      b: interpolateColor(startColor.b, endColor.b, scrollPercent),
-    };
-
-    const colorString = `rgb(${newColor.r}, ${newColor.g}, ${newColor.b})`;
-
-    drops.forEach((drop) => {
-      drop.style.backgroundColor = colorString;
-    });
-  });
-
-  // Fade-in effect for sections
-  const observer = new IntersectionObserver((entries, observer) => {
+// Intersection Observer for scroll animations
+const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
+        if (entry.isIntersecting) {
+            if (entry.target.id === 'about') {
+                typeWriter();
+            }
+            entry.target.classList.add('fade-in');
+        }
     });
-  }, { threshold: 0.5 });
+}, { threshold: 0.5 });
 
-  sections.forEach(section => {
+document.querySelectorAll('section').forEach(section => {
     observer.observe(section);
-  });
+});
 
-  document.addEventListener("mousemove", (e) => {
-    const bubble = document.createElement("div");
-    bubble.classList.add("particle");
-    document.body.appendChild(bubble);
-    bubble.style.left = `${e.pageX}px`;
-    bubble.style.top = `${e.pageY}px`;
-    bubble.style.animation = `particle-animation 1s ease-out`;
+// Timeline interactions
+document.querySelectorAll('.timeline-item').forEach(item => {
+    item.addEventListener('click', () => {
+        const details = item.querySelector('.details');
+        const wasExpanded = item.classList.contains('expanded');
+        
+        // Reset all items
+        document.querySelectorAll('.timeline-item').forEach(i => {
+            i.classList.remove('expanded');
+            i.querySelector('.details').style.display = 'none';
+        });
 
-    setTimeout(() => bubble.remove(), 1000);
-  });
+        // Toggle clicked item
+        if (!wasExpanded) {
+            item.classList.add('expanded');
+            details.style.display = 'block';
+        }
+    });
+});
 
-  let loading = false;
-
-  window.addEventListener('scroll', () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight && !loading) {
-      loading = true;
-      loadMoreContent();
+// Particle.js configurations
+particlesJS('particles-js', {
+    particles: {
+        number: { value: 80 },
+        color: { value: '#a855f7' },
+        shape: { type: 'circle' },
+        opacity: {
+            value: 0.5,
+            random: true
+        },
+        size: {
+            value: 3,
+            random: true
+        },
+        move: {
+            enable: true,
+            speed: 2
+        },
+        line_linked: {
+            enable: true,
+            color: '#a855f7',
+            opacity: 0.2
+        }
     }
-  });
+});
 
-  function loadMoreContent() {
-    const loader = document.createElement('div');
-    loader.classList.add('loader');
-    loader.innerHTML = `<p>Loading more content...</p>`;
-    document.querySelector('main').appendChild(loader);
+particlesJS('particles-js-2', {
+    // Similar configuration with different values
+    particles: {
+        number: { value: 40 },
+        color: { value: '#d8b4fe' },
+        shape: { type: 'circle' },
+        opacity: {
+            value: 0.3,
+            random: true
+        },
+        size: {
+            value: 4,
+            random: true
+        },
+        move: {
+            enable: true,
+            speed: 1.5
+        },
+        line_linked: {
+            enable: false
+        }
+    }
+});
 
-    // Simulate loading time
-    setTimeout(() => {
-      loader.remove();
-      const newContent = document.createElement('div');
-      newContent.classList.add('content-block');
-      newContent.innerHTML = `<p>New content loaded.</p>`;
-      document.querySelector('main').appendChild(newContent);
+particlesJS('particles-js-3', {
+    particles: {
+        number: { value: 100 },
+        color: { value: '#a855f7' },
+        shape: { type: 'circle' },
+        opacity: {
+            value: 0.4,
+            random: true
+        },
+        size: {
+            value: 2,
+            random: true
+        },
+        move: {
+            enable: true,
+            speed: 1
+        },
+        line_linked: {
+            enable: true,
+            color: '#d8b4fe',
+            opacity: 0.3,
+            width: 1
+        }
+    }
+});
 
-      loading = false;
-    }, 2000);
-  }
+// Möbius strip using Three.js
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.getElementById('mobius-container').appendChild(renderer.domElement);
 
-  // Example: Typing effect on header
-  const header = document.querySelector('h1');
-  header.classList.add('typing');
+// Create two Möbius strips
+function createMobiusStrip(radius, tubeRadius, color) {
+    const geometry = new THREE.ParametricGeometry((u, v, target) => {
+        u *= Math.PI * 2;
+        v *= 2;
+        
+        const x = (radius + tubeRadius * Math.cos(v)) * Math.cos(u);
+        const y = (radius + tubeRadius * Math.cos(v)) * Math.sin(u);
+        const z = tubeRadius * Math.sin(v);
+        
+        target.set(x, y, z);
+    }, 100, 20);
+
+    const material = new THREE.MeshPhongMaterial({
+        color: color,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.7
+    });
+
+    return new THREE.Mesh(geometry, material);
+}
+
+const mobius1 = createMobiusStrip(3, 0.5, 0xa855f7);
+const mobius2 = createMobiusStrip(2.5, 0.3, 0xd8b4fe);
+
+scene.add(mobius1);
+scene.add(mobius2);
+
+// Add lights
+const light = new THREE.PointLight(0xffffff, 1);
+light.position.set(5, 5, 5);
+scene.add(light);
+
+const ambientLight = new THREE.AmbientLight(0x404040);
+scene.add(ambientLight);
+
+camera.position.z = 10;
+
+// Animation loop
+function animate() {
+    requestAnimationFrame(animate);
+    
+    mobius1.rotation.x += 0.01;
+    mobius1.rotation.y += 0.01;
+    
+    mobius2.rotation.x -= 0.01;
+    mobius2.rotation.y -= 0.01;
+    
+    renderer.render(scene, camera);
+}
+
+animate();
+
+// Handle window resize
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
 });
