@@ -1,247 +1,302 @@
-// Initialize Three.js scene
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({
-    canvas: document.querySelector('#bg'),
-    alpha: true
-});
-
-renderer.setPixelRatio(window.devicePixelRatio);
-renderer.setSize(window.innerWidth, window.innerHeight);
-camera.position.setZ(30);
-
-// Create multiple particle systems with different behaviors
-class ParticleSystem {
-    constructor(count, color, size, speed, behavior) {
-        this.geometry = new THREE.BufferGeometry();
-        this.positions = new Float32Array(count * 3);
-        this.velocities = new Float32Array(count * 3);
-        this.speed = speed;
-        this.behavior = behavior;
-
-        for(let i = 0; i < count * 3; i += 3) {
-            this.positions[i] = (Math.random() - 0.5) * 100;
-            this.positions[i + 1] = (Math.random() - 0.5) * 100;
-            this.positions[i + 2] = (Math.random() - 0.5) * 100;
-
-            this.velocities[i] = (Math.random() - 0.5) * speed;
-            this.velocities[i + 1] = (Math.random() - 0.5) * speed;
-            this.velocities[i + 2] = (Math.random() - 0.5) * speed;
-        }
-
-        this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
+// Performance monitoring and WebGL setup
+class PerformanceMonitor {
+    constructor() {
+        this.fps = 0;
+        this.frames = 0;
+        this.lastTime = performance.now();
+        this.stats = document.getElementById('perf-stats');
+        this.memoryHistory = new Array(60).fill(0);
+        this.fpsHistory = new Array(60).fill(0);
         
-        this.material = new THREE.PointsMaterial({
-            size,
-            color,
-            transparent: true,
-            opacity: 0.8,
-            blending: THREE.AdditiveBlending
+        // Performance metrics tracking
+        this.observer = new PerformanceObserver((list) => {
+            for (const entry of list.getEntries()) {
+                if (entry.entryType === 'layout-shift') {
+                    this.recordCLS(entry.value);
+                }
+            }
         });
-
-        this.points = new THREE.Points(this.geometry, this.material);
-        scene.add(this.points);
+        
+        this.observer.observe({ entryTypes: ['layout-shift', 'largest-contentful-paint', 'first-input'] });
     }
 
-    update(time) {
-        const positions = this.geometry.attributes.position.array;
+    update() {
+        const now = performance.now();
+        this.frames++;
 
-        for(let i = 0; i < positions.length; i += 3) {
-            switch(this.behavior) {
-                case 'spiral':
-                    positions[i] += Math.sin(time * 0.001 + i) * this.speed * 0.1;
-                    positions[i + 1] += Math.cos(time * 0.001 + i) * this.speed * 0.1;
-                    positions[i + 2] += this.velocities[i + 2];
-                    break;
-                case 'wave':
-                    positions[i] += this.velocities[i];
-                    positions[i + 1] += Math.sin(time * 0.001 + positions[i] * 0.1) * this.speed * 0.1;
-                    positions[i + 2] += this.velocities[i + 2];
-                    break;
-                case 'vortex':
-                    const angle = Math.atan2(positions[i], positions[i + 2]);
-                    const radius = Math.sqrt(positions[i] ** 2 + positions[i + 2] ** 2);
-                    positions[i] = Math.cos(angle + time * 0.001) * radius;
-                    positions[i + 2] = Math.sin(angle + time * 0.001) * radius;
-                    positions[i + 1] += this.velocities[i + 1];
-                    break;
+        if (now >= this.lastTime + 1000) {
+            this.fps = (this.frames * 1000) / (now - this.lastTime);
+            this.fpsHistory.push(this.fps);
+            this.fpsHistory.shift();
+
+            if (performance.memory) {
+                this.memoryHistory.push(performance.memory.usedJSHeapSize / 1048576);
+                this.memoryHistory.shift();
             }
 
-            // Reset particles that go out of bounds
-            if(Math.abs(positions[i]) > 50) positions[i] *= -0.9;
-            if(Math.abs(positions[i + 1]) > 50) positions[i + 1] *= -0.9;
-            if(Math.abs(positions[i + 2]) > 50) positions[i + 2] *= -0.9;
+            this.lastTime = now;
+            this.frames = 0;
+            this.updateDisplay();
         }
+    }
 
-        this.geometry.attributes.position.needsUpdate = true;
+    updateDisplay() {
+        const avgFps = Math.round(this.fpsHistory.reduce((a, b) => a + b, 0) / this.fpsHistory.length);
+        const memory = performance.memory ? 
+            `${Math.round(this.memoryHistory[this.memoryHistory.length - 1])}MB` : 'N/A';
+        
+        this.stats.innerHTML = `
+            <span>FPS: ${avgFps}</span>
+            <span>Memory: ${memory}</span>
+        `;
+    }
+
+    recordCLS(value) {
+        console.log(`CLS: ${value}`);
     }
 }
 
-// Create different particle systems
-const particleSystems = [
-    new ParticleSystem(1000, 0x6C63FF, 0.05, 0.1, 'spiral'),
-    new ParticleSystem(800, 0x4CAF50, 0.03, 0.15, 'wave'),
-    new ParticleSystem(600, 0xFF6B6B, 0.04, 0.12, 'vortex')
-];
+// WebGL Background Handler
+class WebGLBackground {
+    constructor() {
+        this.canvas = document.getElementById('webgl-background');
+        this.gl = this.canvas.getContext('webgl2');
+        this.time = 0;
+        this.resolution = new Float32Array(2);
+        
+        this.initialize();
+    }
 
-// Create floating 3D objects
-const createFloatingObject = (geometry, material, position) => {
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(...position);
-    scene.add(mesh);
-    return mesh;
-};
-
-const objects = [
-    createFloatingObject(
-        new THREE.TorusGeometry(3, 1, 16, 100),
-        new THREE.MeshStandardMaterial({ color: 0x6C63FF, wireframe: true }),
-        [10, 5, -5]
-    ),
-    createFloatingObject(
-        new THREE.IcosahedronGeometry(2),
-        new THREE.MeshStandardMaterial({ color: 0x4CAF50, wireframe: true }),
-        [-8, -4, -10]
-    ),
-    createFloatingObject(
-        new THREE.OctahedronGeometry(2),
-        new THREE.MeshStandardMaterial({ color: 0xFF6B6B, wireframe: true }),
-        [6, -8, -15]
-    )
-];
-
-// Add ambient and point lights
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-scene.add(ambientLight);
-
-const pointLights = [
-    new THREE.PointLight(0x6C63FF, 1),
-    new THREE.PointLight(0x4CAF50, 1),
-    new THREE.PointLight(0xFF6B6B, 1)
-];
-
-pointLights[0].position.set(5, 5, 5);
-pointLights[1].position.set(-5, -5, 5);
-pointLights[2].position.set(0, 0, -5);
-
-pointLights.forEach(light => scene.add(light));
-
-// Custom cursor with trail effect
-const cursor = document.getElementById('cursor');
-const cursorBlur = document.getElementById('cursor-blur');
-let mouseX = 0;
-let mouseY = 0;
-let cursorX = 0;
-let cursorY = 0;
-
-document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX;
-    mouseY = e.clientY;
-});
-
-// Scroll-based scene changes
-let currentSection = '';
-const updateBackground = () => {
-    const sections = document.querySelectorAll('section');
-    sections.forEach(section => {
-        const rect = section.getBoundingClientRect();
-        if(rect.top < window.innerHeight / 2 && rect.bottom > window.innerHeight / 2) {
-            if(currentSection !== section.id) {
-                currentSection = section.id;
-                updateSceneForSection(currentSection);
+    initialize() {
+        // Vertex shader program
+        const vsSource = `#version 300 es
+            in vec4 a_position;
+            void main() {
+                gl_Position = a_position;
             }
-        }
-    });
-};
+        `;
 
-const updateSceneForSection = (sectionId) => {
-    const transitions = {
-        hero: () => {
-            camera.position.z = 30;
-            scene.background = new THREE.Color(0x1a1a1a);
-        },
-        about: () => {
-            camera.position.z = 25;
-            scene.background = new THREE.Color(0x2a1a4a);
-        },
-        experience: () => {
-            camera.position.z = 20;
-            scene.background = new THREE.Color(0x1a2a4a);
-        },
-        unique: () => {
-            camera.position.z = 15;
-            scene.background = new THREE.Color(0x4a1a2a);
-        },
-        contact: () => {
-            camera.position.z = 10;
-            scene.background = new THREE.Color(0x2a4a1a);
-        }
-    };
+        // Fragment shader program
+        const fsSource = `#version 300 es
+            precision highp float;
+            uniform vec2 u_resolution;
+            uniform float u_time;
+            out vec4 fragColor;
 
-    if(transitions[sectionId]) {
-        gsap.to(camera.position, {
-            ...transitions[sectionId](),
-            duration: 1.5,
-            ease: 'power2.inOut'
+            vec3 palette(float t) {
+                vec3 a = vec3(0.5, 0.5, 0.5);
+                vec3 b = vec3(0.5, 0.5, 0.5);
+                vec3 c = vec3(1.0, 1.0, 1.0);
+                vec3 d = vec3(0.263, 0.416, 0.557);
+                return a + b * cos(6.28318 * (c * t + d));
+            }
+
+            void main() {
+                vec2 uv = (gl_FragCoord.xy * 2.0 - u_resolution) / min(u_resolution.x, u_resolution.y);
+                vec2 uv0 = uv;
+                vec3 finalColor = vec3(0.0);
+                
+                for(float i = 0.0; i < 4.0; i++) {
+                    uv = fract(uv * 1.5) - 0.5;
+                    float d = length(uv) * exp(-length(uv0));
+                    vec3 col = palette(length(uv0) + i * 0.4 + u_time * 0.4);
+                    d = sin(d * 8.0 + u_time) / 8.0;
+                    d = abs(d);
+                    d = pow(0.01 / d, 1.2);
+                    finalColor += col * d;
+                }
+                
+                fragColor = vec4(finalColor, 1.0);
+            }
+        `;
+
+        // Initialize shaders
+        const vertexShader = this.createShader(this.gl.VERTEX_SHADER, vsSource);
+        const fragmentShader = this.createShader(this.gl.FRAGMENT_SHADER, fsSource);
+        this.program = this.createProgram(vertexShader, fragmentShader);
+
+        // Look up uniforms
+        this.resolutionUniformLocation = this.gl.getUniformLocation(this.program, 'u_resolution');
+        this.timeUniformLocation = this.gl.getUniformLocation(this.program, 'u_time');
+
+        // Create buffer
+        const positions = new Float32Array([
+            -1, -1,
+             1, -1,
+            -1,  1,
+            -1,  1,
+             1, -1,
+             1,  1,
+        ]);
+
+        const positionBuffer = this.gl.createBuffer();
+        this.gl.bindBuffer(this.gl.ARRAY_BUFFER, positionBuffer);
+        this.gl.bufferData(this.gl.ARRAY_BUFFER, positions, this.gl.STATIC_DRAW);
+
+        // Create VAO
+        const vao = this.gl.createVertexArray();
+        this.gl.bindVertexArray(vao);
+
+        const positionAttributeLocation = this.gl.getAttribLocation(this.program, 'a_position');
+        this.gl.enableVertexAttribArray(positionAttributeLocation);
+        this.gl.vertexAttribPointer(positionAttributeLocation, 2, this.gl.FLOAT, false, 0, 0);
+
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+    }
+
+    createShader(type, source) {
+        const shader = this.gl.createShader(type);
+        this.gl.shaderSource(shader, source);
+        this.gl.compileShader(shader);
+        return shader;
+    }
+
+    createProgram(vertexShader, fragmentShader) {
+        const program = this.gl.createProgram();
+        this.gl.attachShader(program, vertexShader);
+        this.gl.attachShader(program, fragmentShader);
+        this.gl.linkProgram(program);
+        return program;
+    }
+
+    resize() {
+        const displayWidth = this.canvas.clientWidth * window.devicePixelRatio;
+        const displayHeight = this.canvas.clientHeight * window.devicePixelRatio;
+
+        if (this.canvas.width !== displayWidth || this.canvas.height !== displayHeight) {
+            this.canvas.width = displayWidth;
+            this.canvas.height = displayHeight;
+            this.gl.viewport(0, 0, this.gl.canvas.width, this.gl.canvas.height);
+        }
+
+        this.resolution[0] = this.canvas.width;
+        this.resolution[1] = this.canvas.height;
+    }
+
+    render(deltaTime) {
+        this.time += deltaTime * 0.001;
+        this.gl.useProgram(this.program);
+        this.gl.uniform2fv(this.resolutionUniformLocation, this.resolution);
+        this.gl.uniform1f(this.timeUniformLocation, this.time);
+        this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+    }
+}
+
+// Smooth Scroll Handler
+class SmoothScroll {
+    constructor() {
+        this.current = window.scrollY;
+        this.target = window.scrollY;
+        this.ease = 0.075;
+        
+        this.init();
+    }
+
+    init() {
+        document.body.style.height = `${document.documentElement.scrollHeight}px`;
+        
+        requestAnimationFrame(() => this.animate());
+        window.addEventListener('scroll', () => this.onScroll());
+        window.addEventListener('resize', () => this.onResize());
+    }
+
+    onScroll() {
+        this.target = window.scrollY;
+    }
+
+    onResize() {
+        document.body.style.height = `${document.documentElement.scrollHeight}px`;
+    }
+
+    animate() {
+        this.current = lerp(this.current, this.target, this.ease);
+        this.current = Math.floor(this.current * 100) / 100;
+
+        const transform = `translate3d(0, ${-this.current}px, 0)`;
+        document.documentElement.style.transform = transform;
+
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
+// Main Application
+class App {
+    constructor() {
+        this.perfMonitor = new PerformanceMonitor();
+        this.webglBackground = new WebGLBackground();
+        this.smoothScroll = new SmoothScroll();
+        
+        this.init();
+    }
+
+    init() {
+        this.initializeGlitchEffect();
+        this.setupIntersectionObserver();
+        this.setupEventListeners();
+        
+        requestAnimationFrame(() => this.animate());
+    }
+
+    initializeGlitchEffect() {
+        const glitchText = document.querySelector('.glitch-text');
+        if (!glitchText) return;
+
+        let originalText = glitchText.textContent;
+        glitchText.setAttribute('data-text', originalText);
+
+        setInterval(() => {
+            if (Math.random() > 0.95) {
+                glitchText.style.setProperty('--glitch-offset', `${Math.random() * 10 - 5}px`);
+                setTimeout(() => {
+                    glitchText.style.setProperty('--glitch-offset', '0px');
+                }, 50);
+            }
+        }, 100);
+    }
+
+    setupIntersectionObserver() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(section => {
+            observer.observe(section);
         });
     }
-};
 
-// Animation loop
-const animate = (time) => {
-    requestAnimationFrame(animate);
+    setupEventListeners() {
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(anchor.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    }
 
-    // Update particle systems
-    particleSystems.forEach(system => system.update(time));
+    animate(timestamp) {
+        this.perfMonitor.update();
+        this.webglBackground.render(timestamp);
+        requestAnimationFrame((t) => this.animate(t));
+    }
+}
 
-    // Animate floating objects
-    objects.forEach((obj, i) => {
-        obj.rotation.x += 0.001 + i * 0.001;
-        obj.rotation.y += 0.002 + i * 0.001;
-        obj.position.y += Math.sin(time * 0.001 + i) * 0.02;
-    });
+// Utility Functions
+function lerp(start, end, factor) {
+    return start * (1 - factor) + end * factor;
+}
 
-    // Smooth cursor movement
-    cursorX += (mouseX - cursorX) * 0.1;
-    cursorY += (mouseY - cursorY) * 0.1;
-    cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px)`;
-    cursorBlur.style.transform = `translate(${cursorX - 20}px, ${cursorY - 20}px)`;
-
-    // Update lights
-    pointLights.forEach((light, i) => {
-        light.position.x = Math.sin(time * 0.001 + i * Math.PI * 2 / 3) * 10;
-        light.position.y = Math.cos(time * 0.001 + i * Math.PI * 2 / 3) * 10;
-    });
-
-    renderer.render(scene, camera);
-};
-
-// Handle window resize
-window.addEventListener('resize', () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+// Initialize app when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    const app = new App();
 });
-
-// Handle scroll events
-window.addEventListener('scroll', updateBackground);
-
-// Initialize animations
-gsap.registerPlugin(ScrollTrigger);
-
-// Animate sections on scroll
-gsap.utils.toArray('section').forEach(section => {
-    gsap.from(section, {
-        opacity: 0,
-        y: 100,
-        duration: 1,
-        scrollTrigger: {
-            trigger: section,
-            start: 'top center+=200',
-            once: true
-        }
-    });
-});
-
-// Start animation loop
-animate(0);
