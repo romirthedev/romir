@@ -1,4 +1,3 @@
-// index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,12 +8,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.158.0/three.min.js"></script>
-    <!-- Custom Styles -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Background Canvas for Stars -->
+    <!-- Background Elements -->
     <canvas class="stars"></canvas>
+    <div class="interactive-bg"></div>
     
     <!-- Navigation -->
     <nav class="nav">
@@ -26,19 +25,17 @@
         </div>
     </nav>
 
-    <!-- Decorative Planet -->
-    <div class="planet"></div>
-
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
-            <h1>John Doe</h1>
+            <h1>Hello, I'm <span class="highlight">John Doe</span></h1>
             <p class="hero-subtitle">Full Stack Developer & Space Enthusiast</p>
             <div class="hero-cta">
-                <a href="#projects" class="btn primary-btn">View Projects</a>
-                <a href="#contact" class="btn secondary-btn">Contact Me</a>
+                <a href="#projects" class="btn primary-btn">View My Work</a>
+                <a href="#contact" class="btn secondary-btn">Get In Touch</a>
             </div>
         </div>
+        <!-- Particles and orbital elements will be added by JS -->
     </section>
 
     <!-- About Section -->
@@ -47,7 +44,7 @@
             <h2 class="section-title">About Me</h2>
             <div class="about-content">
                 <div class="about-text">
-                    <p>I'm a passionate full-stack developer with expertise in modern web technologies and a deep fascination with space exploration. Through my work, I aim to create digital experiences that are both beautiful and functional.</p>
+                    <p>I'm a passionate full-stack developer with a love for creating beautiful, functional websites. With a background in both front-end and back-end development, I bring ideas to life through clean code and creative solutions.</p>
                     <div class="skills">
                         <h3>Technical Skills</h3>
                         <div class="skill-tags">
@@ -56,6 +53,9 @@
                             <span class="skill-tag">Node.js</span>
                             <span class="skill-tag">Python</span>
                             <span class="skill-tag">AWS</span>
+                            <span class="skill-tag">MongoDB</span>
+                            <span class="skill-tag">GraphQL</span>
+                            <span class="skill-tag">Docker</span>
                         </div>
                     </div>
                 </div>
@@ -66,52 +66,52 @@
     <!-- Projects Section -->
     <section id="projects" class="section">
         <div class="container">
-            <h2 class="section-title">Projects</h2>
-            <div class="projects">
+            <h2 class="section-title">Featured Projects</h2>
+            <div class="projects-grid">
                 <article class="project-card">
                     <div class="project-content">
-                        <h3>Stellar Navigation</h3>
-                        <p>A real-time space visualization tool built with Three.js and WebGL.</p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Three.js</span>
-                            <span class="tech-tag">WebGL</span>
-                            <span class="tech-tag">React</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="#" class="project-link">View Project</a>
-                            <a href="#" class="project-link">Source Code</a>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="project-card">
-                    <div class="project-content">
-                        <h3>Galaxy Explorer</h3>
-                        <p>An interactive database of celestial objects with real-time updates.</p>
-                        <div class="project-tech">
-                            <span class="tech-tag">Node.js</span>
-                            <span class="tech-tag">MongoDB</span>
-                            <span class="tech-tag">Socket.io</span>
-                        </div>
-                        <div class="project-links">
-                            <a href="#" class="project-link">View Project</a>
-                            <a href="#" class="project-link">Source Code</a>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="project-card">
-                    <div class="project-content">
-                        <h3>Cosmic Dashboard</h3>
-                        <p>Real-time data visualization dashboard for space mission analytics.</p>
+                        <h3>Stellar Dashboard</h3>
+                        <p>A real-time analytics dashboard with interactive data visualizations.</p>
                         <div class="project-tech">
                             <span class="tech-tag">React</span>
                             <span class="tech-tag">D3.js</span>
-                            <span class="tech-tag">GraphQL</span>
+                            <span class="tech-tag">Node.js</span>
                         </div>
                         <div class="project-links">
-                            <a href="#" class="project-link">View Project</a>
-                            <a href="#" class="project-link">Source Code</a>
+                            <a href="#" class="project-link">Live Demo</a>
+                            <a href="#" class="project-link">GitHub</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-content">
+                        <h3>Space Explorer</h3>
+                        <p>Interactive 3D visualization of the solar system using WebGL.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Three.js</span>
+                            <span class="tech-tag">WebGL</span>
+                            <span class="tech-tag">JavaScript</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">Live Demo</a>
+                            <a href="#" class="project-link">GitHub</a>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="project-card">
+                    <div class="project-content">
+                        <h3>Nebula Chat</h3>
+                        <p>Real-time chat application with end-to-end encryption.</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Socket.io</span>
+                            <span class="tech-tag">Express</span>
+                            <span class="tech-tag">MongoDB</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">Live Demo</a>
+                            <a href="#" class="project-link">GitHub</a>
                         </div>
                     </div>
                 </article>
@@ -122,7 +122,7 @@
     <!-- Contact Section -->
     <section id="contact" class="section">
         <div class="container">
-            <h2 class="section-title">Contact Me</h2>
+            <h2 class="section-title">Let's Connect</h2>
             <div class="contact-content">
                 <form class="contact-form" id="contactForm">
                     <div class="form-group">
@@ -142,7 +142,7 @@
                 <div class="contact-info">
                     <div class="contact-item">
                         <h3>Email</h3>
-                        <p>hello@johndoe.com</p>
+                        <p>hello@johndoe.dev</p>
                     </div>
                     <div class="contact-item">
                         <h3>Location</h3>
@@ -165,7 +165,6 @@
         </div>
     </footer>
 
-    <!-- Custom Scripts -->
     <script src="scripts.js"></script>
 </body>
 </html>
